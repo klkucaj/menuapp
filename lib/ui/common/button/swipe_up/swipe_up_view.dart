@@ -27,6 +27,7 @@ class _SwipeUpViewState extends State<SwipeUpView>
 
   AnimationController? _buttonController;
   AnimationController? _colorController;
+  bool _overrideOpacity = true;
 
   @override
   void initState() {
@@ -38,6 +39,7 @@ class _SwipeUpViewState extends State<SwipeUpView>
         vsync: this,
         lowerBound: _key.dy,
         upperBound: MediaQuery.of(context).size.height,
+        value: MediaQuery.of(context).size.height,
       );
 
       _colorController = AnimationController(
@@ -45,11 +47,14 @@ class _SwipeUpViewState extends State<SwipeUpView>
         vsync: this,
         lowerBound: _key.dy,
         upperBound: MediaQuery.of(context).size.height,
+        value: MediaQuery.of(context).size.height,
       );
 
       _buttonController?.addListener(_buttonControllerUpdate);
       _buttonController?.addStatusListener(_buttonControllerStatusUpdate);
       _colorController?.addListener(_colorControllerUpdate);
+
+      _overrideOpacity = false;
     });
   }
 
@@ -90,7 +95,7 @@ class _SwipeUpViewState extends State<SwipeUpView>
         widget.dispose();
         break;
       case AnimationStatus.dismissed:
-       _colorController?.forward();
+        _colorController?.forward();
       case AnimationStatus.forward:
       case AnimationStatus.reverse:
         break;
@@ -150,12 +155,16 @@ class _SwipeUpViewState extends State<SwipeUpView>
 
   @override
   Widget build(BuildContext context) {
-    final double opacity = _buttonController?.convertToZeroOne() ?? 0;
+    double opacity = _buttonController?.convertToZeroOne() ?? 0;
+    if (opacity != 1) {
+      opacity = 1 - opacity;
+    }
+
     return Scaffold(
       body: CustomPaint(
         painter: CurvedPainter(
-          opacity: 1 - opacity,
-          yValue: _colorController?.value ?? 0,
+          opacity: _overrideOpacity ? 0 : opacity,
+          yValue: _colorController?.value ?? MediaQuery.of(context).size.height,
           color: Theme.of(context).colorScheme.primary,
           inReverse: _colorController?.status == AnimationStatus.reverse,
         ),

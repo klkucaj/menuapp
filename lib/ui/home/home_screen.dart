@@ -64,21 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: Theme.of(context).colorScheme.background,
                   ),
             ),
-            const SizedBox(height: 20),
-            Text(
-              "Option 4",
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.background,
-                  ),
-            ),const SizedBox(height: 20),
-            Text(
-              "Option 4",
-              style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.background,
-                  ),
-            ),
+
           ],
         ),
       ),
